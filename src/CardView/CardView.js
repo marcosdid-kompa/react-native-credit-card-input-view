@@ -1,17 +1,17 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { View, ImageBackground, Image, Text, Platform } from 'react-native';
-import defaultIcons from '../Icons';
-import FlipCard from 'react-native-flip-card-plus';
-import s from './styles';
+import React from "react";
+import PropTypes from "prop-types";
+import { View, ImageBackground, Image, Text, Platform } from "react-native";
+import defaultIcons from "../Icons";
+import FlipCard from "react-native-flip-card-plus";
+import s from "./styles";
 
 const BASE_SIZE = { width: 300, height: 190 };
 const addGaps = (value) => {
   const regex = /^(\d{0,4})(\d{0,4})(\d{0,4})(\d{0,4})$/g;
-  const onlyNumbers = String(value).replace(/[^\d]/g, '');
+  const onlyNumbers = String(value).replace(/[^\d]/g, "");
 
   return onlyNumbers.replace(regex, (regex, $1, $2, $3, $4) =>
-    [$1, $2, $3, $4].filter((group) => !!group).join(' ')
+    [$1, $2, $3, $4].filter((group) => !!group).join(" ")
   );
 };
 
@@ -38,22 +38,22 @@ const propTypes = {
 };
 
 const defaultProps = {
-  name: '',
+  name: "",
   placeholder: {
-    number: '•••• •••• •••• ••••',
-    name: 'NAME',
-    expiryTitle: 'MONTH/YEAR',
-    expiry: '••/••',
-    cvc: '•••',
-    postalCode: 'BANK NAME',
+    number: "•••• •••• •••• ••••",
+    name: "NAME",
+    expiryTitle: "MONTH/YEAR",
+    expiry: "••/••",
+    cvc: "•••",
+    postalCode: "BANK NAME",
   },
 
   scale: 1,
-  fontFamily: Platform.select({ ios: 'Courier', android: 'monospace' }),
-  imageFront: require('../images/card-front.png'),
-  imageBack: require('../images/card-back.png'),
+  fontFamily: Platform.select({ ios: "Courier", android: "monospace" }),
+  imageFront: require("../images/card-front.png"),
+  imageBack: require("../images/card-back.png"),
   onPressfunc: () => {},
-  flipDirection: 'h',
+  flipDirection: "h",
   onLongPressfunc: () => {},
   display: false,
 };
@@ -79,11 +79,12 @@ const CardView = (props) => {
     onLongPressfunc,
     style,
     display,
+    swipeable,
   } = props;
 
   const Icons = { ...defaultIcons, ...customIcons };
-  const isAmex = brand === 'american-express';
-  const shouldFlip = () => !isAmex && focused === 'cvc';
+  const isAmex = brand === "american-express";
+  const shouldFlip = () => !isAmex && focused === "cvc";
 
   const containerSize = { ...BASE_SIZE, height: BASE_SIZE.height * scale };
   const transform = {
@@ -101,21 +102,24 @@ const CardView = (props) => {
     <View style={[s.cardContainer, containerSize, style]}>
       <FlipCard
         style={{ borderWidth: 0 }}
-        flipHorizontal={flipDirection.toLowerCase() == 'h' ? true : false}
-        flipVertical={flipDirection.toLowerCase() == 'v' ? true : false}
+        flipHorizontal={flipDirection.toLowerCase() == "h" ? true : false}
+        flipVertical={flipDirection.toLowerCase() == "v" ? true : false}
         friction={10}
         perspective={2000}
         pressable={true}
+        swipeable={swipeable}
         pressableCustomFunc={true}
         onPressed={onPressfunc}
         longPressable={true}
         onLongPressed={onLongPressfunc}
-        flip={shouldFlip()}>
+        flip={shouldFlip()}
+      >
         <ImageBackground
           style={[BASE_SIZE, s.cardFace, transform]}
-          source={imageFront}>
+          source={imageFront}
+        >
           <Image
-            resizeMode={'contain'}
+            resizeMode={"contain"}
             style={[s.icon]}
             source={Icons[brand]}
           />
@@ -124,8 +128,9 @@ const CardView = (props) => {
               ...baseSyle,
               s.postalCode,
               !number && s.placeholder,
-              isFocused('postalCode'),
-            ]}>
+              isFocused("postalCode"),
+            ]}
+          >
             {!postalCode ? placeholder.postalCode : postalCode}
           </Text>
           <Text
@@ -133,8 +138,9 @@ const CardView = (props) => {
               ...baseSyle,
               s.number,
               !number && s.placeholder,
-              isFocused('number'),
-            ]}>
+              isFocused("number"),
+            ]}
+          >
             {!number ? placeholder.number : display ? addGaps(number) : number}
           </Text>
           <Text
@@ -142,9 +148,10 @@ const CardView = (props) => {
               ...baseSyle,
               s.name,
               !name && s.placeholder,
-              isFocused('name'),
+              isFocused("name"),
             ]}
-            numberOfLines={1}>
+            numberOfLines={1}
+          >
             {!name ? placeholder.name : name.toUpperCase()}
           </Text>
           <Text
@@ -153,8 +160,9 @@ const CardView = (props) => {
               { fontFamily },
               s.expiryLabel,
               !expiryTitle && s.placeholder,
-              focused === 'expiry' && s.focused,
-            ]}>
+              focused === "expiry" && s.focused,
+            ]}
+          >
             {!expiryTitle ? placeholder.expiryTitle : expiryTitle.toUpperCase()}
           </Text>
           <Text
@@ -162,8 +170,9 @@ const CardView = (props) => {
               ...baseSyle,
               s.expiry,
               !expiry && s.placeholder,
-              isFocused('expiry'),
-            ]}>
+              isFocused("expiry"),
+            ]}
+          >
             {!expiry ? placeholder.expiry : expiry}
           </Text>
           {isAmex && (
@@ -172,22 +181,20 @@ const CardView = (props) => {
                 ...baseSyle,
                 s.amexCVC,
                 !cvc && s.placeholder,
-                isFocused('cvc'),
-              ]}>
+                isFocused("cvc"),
+              ]}
+            >
               {!cvc ? placeholder.cvc : cvc}
             </Text>
           )}
         </ImageBackground>
         <ImageBackground
           style={[BASE_SIZE, s.cardFace, transform]}
-          source={imageBack}>
+          source={imageBack}
+        >
           <Text
-            style={[
-              s.baseText,
-              s.cvc,
-              !cvc && s.placeholder,
-              isFocused('cvc'),
-            ]}>
+            style={[s.baseText, s.cvc, !cvc && s.placeholder, isFocused("cvc")]}
+          >
             {!cvc ? placeholder.cvc : cvc}
           </Text>
         </ImageBackground>

@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
 import {
   NativeModules,
   View,
@@ -10,24 +10,24 @@ import {
   ViewPropTypes,
   TextInput,
   findNodeHandle,
-} from 'react-native';
+} from "react-native";
 
-import CreditCard from './CardView/CardView';
-import CCInput from './CCInput';
-import { InjectedProps } from './connectToState';
-													 
-const sHorizontal = StyleSheet.create({ 
+import CreditCard from "./CardView/CardView";
+import CCInput from "./CCInput";
+import { InjectedProps } from "./connectToState";
+
+const sHorizontal = StyleSheet.create({
   container: {
-    alignItems: 'center',
-    width: '100%',
+    alignItems: "center",
+    width: "100%",
     marginTop: -70,
   },
   form: {
     marginVertical: 20,
-    width: '100%',
-    flexDirection: 'row',
+    width: "100%",
+    flexDirection: "row",
     marginHorizontal: 20,
-    height: '100%',
+    height: "100%",
   },
   inputContainer: {
     marginLeft: 20,
@@ -35,7 +35,7 @@ const sHorizontal = StyleSheet.create({
     marginBottom: 20,
   },
   inputLabel: {
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   input: {
     height: 40,
@@ -43,23 +43,23 @@ const sHorizontal = StyleSheet.create({
 });
 const sVertical = StyleSheet.create({
   container: {
-    alignItems: 'center',
-    width: '100%',
-    height: '100%',
+    alignItems: "center",
+    width: "100%",
+    height: "100%",
     marginTop: -70,
   },
   form: {
     marginTop: 20,
     marginBottom: 40,
-    width: '85%',
+    width: "85%",
     marginHorizontal: 40,
-    height: '100%',
+    height: "100%",
   },
   inputContainer: {
     marginVertical: 20,
   },
   inputLabel: {
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   input: {
     height: 40,
@@ -68,14 +68,14 @@ const sVertical = StyleSheet.create({
 const CVC_INPUT_WIDTH = 70;
 const EXPIRY_INPUT_WIDTH = CVC_INPUT_WIDTH;
 const CARD_NUMBER_INPUT_WIDTH_OFFSET = 40;
-const CARD_NUMBER_INPUT_WIDTH = Dimensions.get('window').width * 0.5;
+const CARD_NUMBER_INPUT_WIDTH = Dimensions.get("window").width * 0.5;
 const NAME_INPUT_WIDTH = CARD_NUMBER_INPUT_WIDTH;
 const PREVIOUS_FIELD_OFFSET = 40;
 const POSTAL_CODE_INPUT_WIDTH = 100; // https://github.com/yannickcr/eslint-plugin-react/issues/106
 
 /* eslint react/prop-types: 0 */ export default class CreditCardInput extends Component {
   state = {
-    cardType: '',
+    cardType: "",
   };
   static propTypes = {
     ...InjectedProps,
@@ -109,25 +109,25 @@ const POSTAL_CODE_INPUT_WIDTH = 100; // https://github.com/yannickcr/eslint-plug
     cardViewSize: {},
     labels: {
       name: "CARDHOLDER'S NAME",
-      number: 'CARD NUMBER',
-      expiry: 'EXPIRY',
-      cvc: 'CVC/CCV',
-      postalCode: 'POSTAL CODE',
+      number: "CARD NUMBER",
+      expiry: "EXPIRY",
+      cvc: "CVC/CCV",
+      postalCode: "POSTAL CODE",
     },
     placeholders: {
-      name: 'Full Name',
-      number: '1234 5678 1234 5678',
-      expiry: 'MM/YY',
-      cvc: 'CVC',
-      postalCode: '34567',
+      name: "Full Name",
+      number: "1234 5678 1234 5678",
+      expiry: "MM/YY",
+      cvc: "CVC",
+      postalCode: "34567",
     },
     inputContainerStyle: {
       borderBottomWidth: 1,
-      borderBottomColor: 'black',
+      borderBottomColor: "black",
     },
-    validColor: '',
-    invalidColor: 'red',
-    placeholderColor: 'gray',
+    validColor: "",
+    invalidColor: "red",
+    placeholderColor: "gray",
     allowScroll: false,
     useVertical: false,
     additionalInputsProps: {},
@@ -222,6 +222,7 @@ const POSTAL_CODE_INPUT_WIDTH = 100; // https://github.com/yannickcr/eslint-plug
       cardBrandIcons,
       scrollViewProps,
       useVertical,
+      swipeable,
     } = this.props;
     const styles = useVertical ? sVertical : sHorizontal;
     //console.log(type);
@@ -229,18 +230,20 @@ const POSTAL_CODE_INPUT_WIDTH = 100; // https://github.com/yannickcr/eslint-plug
       <View style={styles.container}>
         <CreditCard
           focused={focused}
-          brand={this.state.cardType !== '' ? this.state.cardType : type}
+          brand={this.state.cardType !== "" ? this.state.cardType : type}
           scale={cardScale}
           fontFamily={cardFontFamily}
           imageFront={cardImageFront}
           imageBack={cardImageBack}
           customIcons={cardBrandIcons}
           placeholder={placeholderCardView}
-          name={requiresName ? name : ' '}
+          name={requiresName ? name : " "}
           number={number}
           cvc={cvc}
           expiry={expiry}
-          postalCode={postalCode} />
+          postalCode={postalCode}
+          swipeable={swipeable}
+        />
         <ScrollView
           ref="Form"
           horizontal={useVertical ? false : true}
@@ -249,49 +252,53 @@ const POSTAL_CODE_INPUT_WIDTH = 100; // https://github.com/yannickcr/eslint-plug
           showsVerticalScrollIndicator={false}
           style={styles.form}
           contentContainerStyle={styles.vForm}
-          {...scrollViewProps}>
+          {...scrollViewProps}
+        >
           {requiresName && (
             <CCInput
-              {...this._inputProps('name')}
+              {...this._inputProps("name")}
               containerStyle={[
                 styles.inputContainer,
                 inputContainerStyle,
-                { width: useVertical ? '100%' : NAME_INPUT_WIDTH },
-              ]} />
+                { width: useVertical ? "100%" : NAME_INPUT_WIDTH },
+              ]}
+            />
           )}
           <CCInput
-            {...this._inputProps('number')}
+            {...this._inputProps("number")}
             keyboardType="numeric"
             containerStyle={[
               styles.inputContainer,
               inputContainerStyle,
-              { width: useVertical ? '100%' : CARD_NUMBER_INPUT_WIDTH },
+              { width: useVertical ? "100%" : CARD_NUMBER_INPUT_WIDTH },
             ]}
           />
           <CCInput
-            {...this._inputProps('expiry')}
+            {...this._inputProps("expiry")}
             keyboardType="numeric"
-            containerStyle={[styles.inputContainer, inputContainerStyle]} />
+            containerStyle={[styles.inputContainer, inputContainerStyle]}
+          />
           {requiresCVC && (
             <CCInput
-              {...this._inputProps('cvc')}
+              {...this._inputProps("cvc")}
               keyboardType="numeric"
               containerStyle={[
                 styles.inputContainer,
                 inputContainerStyle,
-                { width: useVertical ? '100%' : CVC_INPUT_WIDTH },
-              ]} />
+                { width: useVertical ? "100%" : CVC_INPUT_WIDTH },
+              ]}
+            />
           )}
           {requiresPostalCode && (
             <CCInput
-              {...this._inputProps('postalCode')}
+              {...this._inputProps("postalCode")}
               containerStyle={[
                 styles.inputContainer,
                 inputContainerStyle,
-                { width: useVertical ? '100%' : POSTAL_CODE_INPUT_WIDTH },
-              ]} />
+                { width: useVertical ? "100%" : POSTAL_CODE_INPUT_WIDTH },
+              ]}
+            />
           )}
- 	  
         </ScrollView>
       </View>
     );
